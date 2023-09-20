@@ -24,8 +24,9 @@
 
                 <div class="collapse navbar-collapse" id="navbarText">
                     <ul class="navbar-nav side-nav">
+                        @auth('admin')
                         <li class="nav-item">
-                            <a class="nav-link" style="margin-left: 20px;" href="index.html">Home
+                            <a class="nav-link" style="margin-left: 20px;" href="{{ route('admin.dashboard') }}">Home
                                 <span class="sr-only">(current)</span>
                             </a>
                         </li>
@@ -44,12 +45,13 @@
                             <a class="nav-link" href="bookings-admins/show-bookings.html"
                                 style="margin-left: 20px;">Bookings</a>
                         </li>
+                        @endauth
                     </ul>
                     <ul class="navbar-nav ml-md-auto d-md-flex">
 
                         @auth('admin')
                             <li class="nav-item">
-                                <a class="nav-link" href="index.html">Home
+                                <a class="nav-link" href="{{ route('admin.dashboard') }}">Home
                                     <span class="sr-only">(current)</span>
                                 </a>
                             </li>
@@ -67,7 +69,7 @@
                             </li>
                         @else
                             <li class="nav-item">
-                                <a class="nav-link" href="admins/login-admins.html">login
+                                <a class="nav-link" href="{{ route('admin.login') }}">login
                                 </a>
                             </li>
                         @endauth
