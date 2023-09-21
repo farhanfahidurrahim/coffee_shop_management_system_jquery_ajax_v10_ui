@@ -30,7 +30,7 @@ class AdminController extends Controller
 
     public function allAdmin()
     {
-        return view('admin.all_admin');
+        return view('backend.admin.all_admin');
     }
 
     public function getAllAdmin()
@@ -41,7 +41,7 @@ class AdminController extends Controller
 
     public function createAdmin()
     {
-        return view('admin.create_admin');
+        return view('backend.admin.create_admin');
     }
 
     public function storeAdmin(Request $request)
@@ -53,11 +53,14 @@ class AdminController extends Controller
         ]);
 
         $data = $request->all();
-        // Hash the password before storing it
-        $data['password'] = Hash::make($data['password']);
-        Admin::create($data);
+        $data['password'] = Hash::make($data['password']); // Hash the password before storing it
+        $store=Admin::create($data);
+        if ($store) {
+            return redirect()->route('all.admin')->with('success',"Data Added");
+        }else{
+            return redirect()->route('all.admin')->with('error',"Something went wrong!");
+        }
 
-        return redirect()->route('all.admin');
     }
 
     public function create_admin_ajax(Request $request)
@@ -70,29 +73,34 @@ class AdminController extends Controller
         ]);
 
         $data = $request->all();
-        // Hash the password before storing it
-        $data['password'] = Hash::make($data['password']);
-        Admin::create($data);
+        $data['password'] = Hash::make($data['password']); // Hash the password before storing it
+
+        try {
+            Admin::create($data);
+            return response()->json(['success' => 'Admin created successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error creating admin: ' . $e->getMessage()], 500);
+        }
+
     }
 
     public function update_admin_ajax(Request $request, $id)
     {
-        $f=Admin::findOrfail($id);
-
+        $find=Admin::findOrfail($id);
         $request->validate([
             'name' => 'required',
             'email' => 'email|unique:admins,email,' . $id,
         ]);
 
         $data = $request->all();
-        $f->update($data);
+        $find->update($data);
 
         return response()->json(['message' => 'Admin updated successfully']);
     }
 
     public function delete_admin_ajax($id)
     {
-        $f=Admin::findOrfail($id);
-        $f->delete();
+        $find=Admin::findOrfail($id);
+        $find->delete();
     }
 }

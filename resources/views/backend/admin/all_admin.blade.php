@@ -71,14 +71,15 @@
 
             const adminForm =
             `
-                <div class="form-outline mb-4 mt-4">
-                    <input type="email" name="email" onchange="onChangeCreateHandler(event)" id="form2Example1"
-                        class="form-control" placeholder="Email" />
-                </div>
                 <div class="form-outline mb-4">
                     <input type="text" name="name" onchange="onChangeCreateHandler(event)" id="form2Example2"
                         class="form-control" placeholder="Name" />
                 </div>
+                <div class="form-outline mb-4 mt-4">
+                    <input type="email" name="email" onchange="onChangeCreateHandler(event)" id="form2Example1"
+                        class="form-control" placeholder="Email" />
+                </div>
+
                 <div class="form-outline mb-4">
                     <input type="password" name="password" onchange="onChangeCreateHandler(event)" id="form2Example3"
                         class="form-control" placeholder="Password" />
@@ -95,11 +96,11 @@
             `
                 <div class="form-outline mb-4">
                     <input type="text" name="name" onchange="onChangeEditHandler(event)" id="form2Example2"
-                        class="form-control" placeholder="Name" value=` + `${obj?.name}` + `>
+                        class="form-control" placeholder="Name" value="${obj?.name}" />
                 </div>
                 <div class="form-outline mb-4 mt-4">
                     <input type="email" name="email" onchange="onChangeEditHandler(event)" id="form2Example1"
-                        class="form-control" placeholder="Email" value=` + `${obj?.email}` + `>
+                        class="form-control" placeholder="Email" value="${obj?.email}" />
                 </div>
             `
 
@@ -111,10 +112,10 @@
         }
 
         function handleDelete(obj) {
-            const adminId = obj.id; // Assuming your admin object has an 'id' property
+            const adminId = obj.id;
 
             if (confirm("Are you sure you want to delete this admin?")) {
-                const url = `delete-ajax/${adminId}`; // Update the URL to your delete route
+                const url = `delete-ajax/${adminId}`;
 
                 const options = {
                     method: 'DELETE',
@@ -180,7 +181,7 @@
         }
 
         function getAllAdmin() {
-            const url = '{{ route('all.get_ajax_admin') }}';
+            const url = '{{ route('all.admin_ajax') }}';
 
             const options = {
                 method: 'GET',
@@ -208,7 +209,7 @@
         }
 
         function submitCreateForm() {
-            const url = '{{ route('admin.create_ajax') }}';
+            const url = '{{ route('create.admin_ajax') }}';
 
             const options = {
                 method: 'POST',
