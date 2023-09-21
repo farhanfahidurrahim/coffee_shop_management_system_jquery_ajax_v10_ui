@@ -49,7 +49,7 @@
                     } else {
                         submitEditForm();
                     }"
-                    enctype="multipart/form-data">
+                    enctype="multipart/form-data" data-admin-id="">
                     <div class="modal-body">
 
                     </div>
@@ -72,15 +72,15 @@
             const adminForm =
             `
                 <div class="form-outline mb-4 mt-4">
-                    <input type="email" name="email" onchange="onChangeHandler(event)" id="form2Example1"
+                    <input type="email" name="email" onchange="onChangeCreateHandler(event)" id="form2Example1"
                         class="form-control" placeholder="Email" />
                 </div>
                 <div class="form-outline mb-4">
-                    <input type="text" name="name" onchange="onChangeHandler(event)" id="form2Example2"
+                    <input type="text" name="name" onchange="onChangeCreateHandler(event)" id="form2Example2"
                         class="form-control" placeholder="Name" />
                 </div>
                 <div class="form-outline mb-4">
-                    <input type="password" name="password" onchange="onChangeHandler(event)" id="form2Example3"
+                    <input type="password" name="password" onchange="onChangeCreateHandler(event)" id="form2Example3"
                         class="form-control" placeholder="Password" />
                 </div>
             `
@@ -93,52 +93,51 @@
             const modalBody = document.getElementsByClassName('modal-body')[0];
             const editForm =
             `
+                <div class="form-outline mb-4">
+                    <input type="text" name="name" onchange="onChangeEditHandler(event)" id="form2Example2"
+                        class="form-control" placeholder="Name" value=` + `${obj?.name}` + `>
+                </div>
                 <div class="form-outline mb-4 mt-4">
                     <input type="email" name="email" onchange="onChangeEditHandler(event)" id="form2Example1"
                         class="form-control" placeholder="Email" value=` + `${obj?.email}` + `>
                 </div>
-                <div class="form-outline mb-4">
-                    <input type="text" name="name" onchange="onChangeEditHandler(event)" id="form2Example2"
-                        class="form-control" placeholder="Name" value=` + `${obj?.name}` + `/>
-                </div>
             `
 
             modalBody.innerHTML = editForm;
+
+            // Set the admin ID in the data-admin-id attribute
+            const modalForm = document.querySelector('form[data-admin-id]');
+            modalForm.setAttribute('data-admin-id', obj?.id);
         }
-
-        // Edit Data by Ajax //
-        // const editFormData = new FormData();
-
-        // function onChangeEditHandler(event) {
-        //     editFormData.append(event.currentTarget.name, event.currentTarget.value);
-        // }
-
-        // function submitEditForm() {
-        //     const url = '{{ route('admin.update_ajax') }}';
-
-        //     const options = {
-        //         method: 'POST',
-        //         body: editFormData,
-        //         headers: {
-        //             'X-CSRF-TOKEN': '{{ csrf_token() }}',
-        //         },
-        //     };
-
-        //     fetch(url, options)
-        //         .then(function(data) {
-        //             const closebtn = document.getElementById('modalCloseBtn');
-        //             closebtn.click();
-        //             getAllAdmin();
-        //         })
-        //         .catch(error => {
-        //             console.error('API request error:', error);
-        //         });
-        // }
 
         function handleDelete(obj) {
+            const adminId = obj.id; // Assuming your admin object has an 'id' property
 
+            if (confirm("Are you sure you want to delete this admin?")) {
+                const url = `delete-ajax/${adminId}`; // Update the URL to your delete route
 
+                const options = {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                };
+
+                fetch(url, options)
+                    .then(response => {
+                        if (response.ok) {
+                            // Admin was deleted successfully, you can handle the UI changes here if needed.
+                            getAllAdmin();
+                        } else {
+                            console.error('Delete request failed.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('API request error:', error);
+                    });
+            }
         }
+
 
         // Get Data by Ajax //
         function tempalteAdminData(data) {
@@ -199,99 +198,67 @@
 
         window.onload = getAllAdmin()
 
-        // Store Data by Ajax //
-        // const formData = new FormData();
-
-        // function onChangeHandler(event) {
-        //     formData.append(event.currentTarget.name, event.currentTarget.value);
-        // }
-
-        // function submitForm() {
-        //     const url = '{{ route('admin.create_ajax') }}';
-
-        //     const options = {
-        //         method: 'POST',
-        //         body: formData,
-        //         headers: {
-        //             'X-CSRF-TOKEN': '{{ csrf_token() }}',
-        //         },
-        //     };
-
-        //     fetch(url, options)
-        //         .then(function(data) {
-        //             const closebtn = document.getElementById('modalCloseBtn');
-        //             closebtn.click();
-        //             getAllAdmin();
-        //         })
-        //         .catch(error => {
-        //             console.error('API request error:', error);
-        //         });
-        // }
-
-
-
-
 
 
         // Store Data by Ajax for Create
-const createFormData = new FormData();
+        const createFormData = new FormData();
 
-function onChangeCreateHandler(event) {
-    createFormData.append(event.currentTarget.name, event.currentTarget.value);
-}
+        function onChangeCreateHandler(event) {
+            createFormData.append(event.currentTarget.name, event.currentTarget.value);
+        }
 
-function submitCreateForm() {
-    const url = '{{ route('admin.create_ajax') }}';
+        function submitCreateForm() {
+            const url = '{{ route('admin.create_ajax') }}';
 
-    const options = {
-        method: 'POST',
-        body: createFormData,
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-        },
-    };
+            const options = {
+                method: 'POST',
+                body: createFormData,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                },
+            };
 
-    fetch(url, options)
-        .then(function(data) {
-            const closebtn = document.getElementById('modalCloseBtn');
-            closebtn.click();
-            getAllAdmin();
-        })
-        .catch(error => {
-            console.error('API request error:', error);
-        });
-}
+            fetch(url, options)
+                .then(function(data) {
+                    const closebtn = document.getElementById('modalCloseBtn');
+                    closebtn.click();
+                    getAllAdmin();
+                })
+                .catch(error => {
+                    console.error('API request error:', error);
+                });
+        }
 
-// Edit Data by Ajax
+        // Edit Data by Ajax
+        const editFormData = new FormData();
 
-const editFormData = new FormData();
+        function onChangeEditHandler(event) {
+            editFormData.append(event.currentTarget.name, event.currentTarget.value);
+        }
 
-function onChangeEditHandler(event) {
-    editFormData.append(event.currentTarget.name, event.currentTarget.value);
-}
+        function submitEditForm() {
+            const adminId = document.querySelector('form[data-admin-id]').getAttribute('data-admin-id');
 
-function submitEditForm() {
-    const url = '{{ route('admin.update_ajax') }}';
+            const url= `update-ajax/${adminId}`
 
-    const options = {
-        method: 'POST',
-        body: editFormData,
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-        },
-    };
+            const options = {
+                method: 'POST',
+                body: editFormData,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                },
+            };
 
-    fetch(url, options)
-        .then(function(data) {
-            const closebtn = document.getElementById('modalCloseBtn');
-            closebtn.click();
-            getAllAdmin();
-        })
-        .catch(error => {
-            console.error('API request error:', error);
-        });
-}
-
+            fetch(url, options)
+                .then(function(data) {
+                    const closebtn = document.getElementById('modalCloseBtn');
+                    closebtn.click();
+                    getAllAdmin();
+                })
+                .catch(error => {
+                    console.error('API request error:', error);
+                });
+        }
 
     </script>
 @endsection

@@ -75,18 +75,24 @@ class AdminController extends Controller
         Admin::create($data);
     }
 
-    public function update_admin_ajax(Request $request)
+    public function update_admin_ajax(Request $request, $id)
     {
-        return $request->all();
+        $f=Admin::findOrfail($id);
+
         $request->validate([
             'name' => 'required',
-            'email' => 'email|unique:admins',
-            'password' => 'required',
+            'email' => 'email|unique:admins,email,' . $id,
         ]);
 
         $data = $request->all();
-        // Hash the password before storing it
-        $data['password'] = Hash::make($data['password']);
-        Admin::create($data);
+        $f->update($data);
+
+        return response()->json(['message' => 'Admin updated successfully']);
+    }
+
+    public function delete_admin_ajax($id)
+    {
+        $f=Admin::findOrfail($id);
+        $f->delete();
     }
 }
