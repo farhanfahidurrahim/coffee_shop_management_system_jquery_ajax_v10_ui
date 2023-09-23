@@ -38,5 +38,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     //Order Section
     Route::get('product-index', [ProductController::class, 'index'])->name('product.index');
     Route::post('product-store', [ProductController::class, 'storeProduct'])->name('product.store');
-
+    Route::post('product-update/{id}', [ProductController::class, 'updateProduct']);
+    Route::post('product-delete/{id}', [ProductController::class, 'deleteProduct']);
 });

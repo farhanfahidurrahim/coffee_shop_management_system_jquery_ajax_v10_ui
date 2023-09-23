@@ -11,7 +11,7 @@ class AdminController extends Controller
 {
     public function adminLogin()
     {
-        return view('admin.login');
+        return view('backend.login');
     }
 
     public function adminLoginCheck(Request $request)
@@ -25,7 +25,7 @@ class AdminController extends Controller
 
     public function index()
     {
-        return view('admin.index');
+        return view('backend.index');
     }
 
     public function allAdmin()

@@ -4,7 +4,7 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title mb-4 d-inline">Foods</h5>
+                    <h5 class="card-title mb-4 d-inline">Product Index</h5>
                     {{-- <a href="create-products.html" class="btn btn-primary mb-4 text-center float-right">Create Product</a> --}}
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-primary mb-4 text-center float-end" data-bs-toggle="modal" data-bs-target="#addModal">
@@ -30,7 +30,22 @@
                                     <td>image</td>
                                     <td>${{ $data->price }}</td>
                                     <td>{{ $data->type }}</td>
-                                    <td><a href="delete-products.html" class="btn btn-danger  text-center ">delete</a></td>
+                                    <td>
+                                        <a href=""
+                                            class="btn btn-warning text-center editProduct"
+                                            data-bs-toggle="modal" data-bs-target="#updateModal"
+                                            data-id="{{ $data->id }}"
+                                            data-name="{{ $data->name }}"
+                                            data-price="{{ $data->price }}"
+                                            data-description="{{ $data->description }}"
+                                            data-type="{{ $data->type }}"
+                                            >Edit
+                                        </a>
+                                        <a href="" class="btn btn-danger text-center deleteProduct"
+                                            data-id="{{ $data->id }}"
+                                            >Delete
+                                        </a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -77,7 +92,7 @@
 
                         <div class="form-outline mb-2 mt-2">
 
-                            <select name="price" id="type" class="form-select  form-control"
+                            <select name="type" id="type" class="form-select  form-control"
                                 aria-label="Default select example">
                                 <option selected disabled>Choose Type</option>
                                 <option value="drink">Drink</option>
@@ -96,9 +111,8 @@
         </form>
     </div>
 
-    <!-- Include jQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    @include('backend.product.update_modal')
+
     <script>
         $.ajaxSetup({
             headers: {
@@ -108,6 +122,7 @@
     </script>
     <script>
         $(document).ready(function() {
+
             $(document).on('click', '.saveProduct', function(e) {
                 e.preventDefault();
                 let name = $('#name').val();
@@ -130,6 +145,24 @@
                             $('#addModal').modal('hide');
                             $('#addProductForm')[0].reset();
                             $('.table').load(location.href+' .table');
+                            Command: toastr["success"]("Added Done!", "Success")
+                            toastr.options = {
+                            "closeButton": true,
+                            "debug": false,
+                            "newestOnTop": false,
+                            "progressBar": true,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "100",
+                            "hideDuration": "500",
+                            "timeOut": "2500",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                            }
                         }
                     },
                     error: function(err) {
@@ -140,7 +173,115 @@
                                 '<br>');
                         });
                     }
+                });
+            })
+
+            //Show Product Value in Update Modal Form
+            $(document).on('click','.editProduct',function(){
+                let id = $(this).data('id');
+                let name = $(this).data('name');
+                // console.log(name);
+                let price = $(this).data('price');
+                let description = $(this).data('description');
+                let type = $(this).data('type');
+
+                $('#update_id').val(id);
+                $('#update_name').val(name);
+                $('#update_price').val(price);
+                $('#update_description').val(description);
+                $('#update_type').val(type);
+            });
+
+            //Update Porduct From Modal
+            $(document).on('click','.updateProduct', function(e){
+                e.preventDefault();
+                let id = $('#update_id').val();
+                let name = $('#update_name').val();
+                let price = $('#update_price').val();
+                let description = $('#update_description').val();
+                let type = $('#update_type').val();
+                //console.log(name+price);
+
+                $.ajax({
+                    url: "{{ url('/admin/product-update') }}/" + id,
+                    method:'POST',
+                    data:{
+                        _method: 'POST',
+                        name: name,
+                        price: price,
+                        description: description,
+                        type: type,
+                    },
+                    success: function(res){
+                        if (res.status == 'success') {
+                            $('#updateModal').modal('hide');
+                            $('.table').load(location.href+' .table')
+                            Command: toastr["success"]("Updated Done!", "Success")
+                            toastr.options = {
+                            "closeButton": true,
+                            "debug": false,
+                            "newestOnTop": false,
+                            "progressBar": true,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "100",
+                            "hideDuration": "500",
+                            "timeOut": "2500",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                            }
+                        }
+                    },
+                    error: function(err){
+                        let error = err.responseJSON;
+                        $.each(error.errors, function(index, value){
+                            $('.errValidationMsgShow').append(
+                                '<span class="text-danger">' + value + '</span>' +
+                                '<br>');
+                        })
+
+                    }
                 })
+            })
+
+            //Delete Product
+            $(document).on('click','.deleteProduct', function(e){
+                e.preventDefault();
+                let id = $(this).data('id')
+
+                if (confirm("Are you sure to Delete??")) {
+                    $.ajax({
+                        url: "{{ url('/admin/product-delete') }}/" + id,
+                        method: 'POST',
+                        success: function(res){
+                            if (res.status == 'success') {
+                                $('.table').load(location.href+' .table')
+                                Command: toastr["error"]("Deleted Done!", "Success")
+                                toastr.options = {
+                                "closeButton": true,
+                                "debug": false,
+                                "newestOnTop": false,
+                                "progressBar": true,
+                                "positionClass": "toast-top-right",
+                                "preventDuplicates": false,
+                                "onclick": null,
+                                "showDuration": "100",
+                                "hideDuration": "500",
+                                "timeOut": "2500",
+                                "extendedTimeOut": "1000",
+                                "showEasing": "swing",
+                                "hideEasing": "linear",
+                                "showMethod": "fadeIn",
+                                "hideMethod": "fadeOut"
+                                }
+                            }
+                        }
+                    })
+                }
             })
         });
     </script>
