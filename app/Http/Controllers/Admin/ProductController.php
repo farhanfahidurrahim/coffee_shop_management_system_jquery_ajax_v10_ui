@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Product;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
@@ -35,18 +36,20 @@ class ProductController extends Controller
         );
 
         //Image Upload
+
         $imageName = '';
         if ($image = $request->file('image')) {
-            $imageName = time().'-'.uniqid().'.'.$image->getClientOriginalExtension();
+            $imageName = Str::slug($request->name).'-'.time().'.'.$image->getClientOriginalExtension();
             $image->move('uploads/products',$imageName);
         }
 
         Product::create([
-            'name'=>$request->name,
-            'price'=>$request->price,
-            'description'=>$request->description,
-            'type'=>$request->type,
-            'image'=>$imageName,
+            'name' => $request->name,
+            'slug' => Str::slug($request->name,'-'),
+            'price' => $request->price,
+            'description' => $request->description,
+            'type' => $request->type,
+            'image' => $imageName,
         ]);
 
         return response()->json([
@@ -89,13 +92,18 @@ class ProductController extends Controller
         $imagePath = public_path('uploads/products/'.$product->image);
         if (file_exists($imagePath)) {
             unlink($imagePath);
+
+            $product->delete();
+            return response()->json([
+                'status'=>'success'
+            ]);
         }
-
-        $product->delete();
-
-        return response()->json([
-            'status'=>'success'
-        ]);
+        else{
+            $product->delete();
+            return response()->json([
+                'status'=>'success'
+            ]);
+        }
     }
 
     public function paginationProductAjax(Request $request)

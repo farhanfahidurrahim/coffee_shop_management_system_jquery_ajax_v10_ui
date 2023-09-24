@@ -53,7 +53,7 @@
                                     style="margin-left: 20px;">Products</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="bookings-admins/show-bookings.html"
+                                <a class="nav-link" href="{{ route('booking.index') }}"
                                     style="margin-left: 20px;">Bookings</a>
                             </li>
                         @endauth

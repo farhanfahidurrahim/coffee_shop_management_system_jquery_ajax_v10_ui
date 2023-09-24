@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +14,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
+//Frontend Route
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/product-view/{id}', [App\Http\Controllers\HomeController::class, 'viewProduct'])->name('product.view');
+Route::post('/product-add-cart/{id}', [App\Http\Controllers\HomeController::class, 'addToCart'])->name('product.addToCart');
 
 //Backend Route
 Route::get('admin/login', [AdminController::class, 'adminLogin'])->name('admin.login')->middleware('check.adminAuth');
@@ -41,4 +45,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::post('product-update/{id}', [ProductController::class, 'updateProduct']);
     Route::post('product-delete/{id}', [ProductController::class, 'deleteProduct']);
     Route::get('/product-pagination/paginate-data', [ProductController::class, 'paginationProductAjax']);
+
+    //Booking Section
+    Route::get('booking-index', [BookingController::class, 'index'])->name('booking.index');
 });
