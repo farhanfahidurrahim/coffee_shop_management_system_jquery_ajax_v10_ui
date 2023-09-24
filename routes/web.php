@@ -35,9 +35,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     //Order Section
     Route::get('order-index', [OrderController::class, 'index'])->name('order.index');
 
-    //Order Section
+    //Product Section
     Route::get('product-index', [ProductController::class, 'index'])->name('product.index');
     Route::post('product-store', [ProductController::class, 'storeProduct'])->name('product.store');
     Route::post('product-update/{id}', [ProductController::class, 'updateProduct']);
     Route::post('product-delete/{id}', [ProductController::class, 'deleteProduct']);
+    Route::get('/product-pagination/paginate-data', [ProductController::class, 'paginationProductAjax']);
 });

@@ -20,6 +20,7 @@ class ProductController extends Controller
             [
                 'name' => 'required|unique:products',
                 'price' => 'required',
+                'image'=>'required',
                 'description' => 'required',
                 'type' => 'required',
             ],
@@ -27,13 +28,26 @@ class ProductController extends Controller
                 'name.required' => "Name is required!",
                 'name.unique' => "Product Already Exist!",
                 'price.required' => "Price is required!",
+                'image.required' => "Image is required!",
                 'description.required' => "Description is required!",
                 'type.required' => "Type is required!",
             ]
         );
 
-        $data=$request->all();
-        Product::create($data);
+        //Image Upload
+        $imageName = '';
+        if ($image = $request->file('image')) {
+            $imageName = time().'-'.uniqid().'.'.$image->getClientOriginalExtension();
+            $image->move('uploads/products',$imageName);
+        }
+
+        Product::create([
+            'name'=>$request->name,
+            'price'=>$request->price,
+            'description'=>$request->description,
+            'type'=>$request->type,
+            'image'=>$imageName,
+        ]);
 
         return response()->json([
             'status'=>'success',
@@ -70,10 +84,23 @@ class ProductController extends Controller
 
     public function deleteProduct($id)
     {
-        Product::findOrfail($id)->delete();
+        $product = Product::findOrFail($id);
+
+        $imagePath = public_path('uploads/products/'.$product->image);
+        if (file_exists($imagePath)) {
+            unlink($imagePath);
+        }
+
+        $product->delete();
 
         return response()->json([
             'status'=>'success'
         ]);
+    }
+
+    public function paginationProductAjax(Request $request)
+    {
+        $products=Product::latest()->paginate(10);
+        return view('backend.product.pagination_index', compact('products'))->render();
     }
 }

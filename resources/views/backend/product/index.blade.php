@@ -11,46 +11,50 @@
                         Create Product by Ajax
                     </button>
 
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Image</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Type</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($products as $key=>$data )
+                    <div class="table-data">
+                        <table class="table">
+                            <thead>
                                 <tr>
-                                    <th scope="row">{{ $key+1 }}</th>
-                                    <td>{{ $data->name }}</td>
-                                    <td>image</td>
-                                    <td>${{ $data->price }}</td>
-                                    <td>{{ $data->type }}</td>
-                                    <td>
-                                        <a href=""
-                                            class="btn btn-warning text-center editProduct"
-                                            data-bs-toggle="modal" data-bs-target="#updateModal"
-                                            data-id="{{ $data->id }}"
-                                            data-name="{{ $data->name }}"
-                                            data-price="{{ $data->price }}"
-                                            data-description="{{ $data->description }}"
-                                            data-type="{{ $data->type }}"
-                                            >Edit
-                                        </a>
-                                        <a href="" class="btn btn-danger text-center deleteProduct"
-                                            data-id="{{ $data->id }}"
-                                            >Delete
-                                        </a>
-                                    </td>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Image</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Action</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    {!! $products->links() !!}
+                            </thead>
+                            <tbody>
+                                @foreach ($products as $key=>$data )
+                                    <tr>
+                                        <th scope="row">{{ $key+1 }}</th>
+                                        <td>{{ $data->name }}</td>
+                                        <td>
+                                            <img src="{{ asset('uploads/products/'.$data->image) }}" width="75" height="50" alt="{{ $data->name }}">
+                                        </td>
+                                        <td>${{ $data->price }}</td>
+                                        <td>{{ $data->type }}</td>
+                                        <td>
+                                            <a href=""
+                                                class="btn btn-warning text-center editProduct"
+                                                data-bs-toggle="modal" data-bs-target="#updateModal"
+                                                data-id="{{ $data->id }}"
+                                                data-name="{{ $data->name }}"
+                                                data-price="{{ $data->price }}"
+                                                data-description="{{ $data->description }}"
+                                                data-type="{{ $data->type }}"
+                                                >Edit
+                                            </a>
+                                            <a href="" class="btn btn-danger text-center deleteProduct"
+                                                data-id="{{ $data->id }}"
+                                                >Delete
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        {!! $products->links() !!}
+                    </div>
                 </div>
             </div>
         </div>
@@ -80,10 +84,10 @@
                             <input type="text" name="price" id="price" class="form-control" placeholder="Price" />
 
                         </div>
+                        <img src="" width="200" height="100" class="image_preview">
                         <div class="form-outline mb-2 mt-2">
                             <label for="name">Image</label>
-                            <input type="file" name="image" id="image" class="form-control" />
-
+                            <input type="file" name="image" id="image" class="form-control" accept="image/*"/>
                         </div>
                         <div class="form-group">
                             <label for="name">Description</label>
@@ -123,45 +127,67 @@
     <script>
         $(document).ready(function() {
 
+            //todo:image preview
+            $(document).on('change','#image', function() {
+                $('.error_success_msg_container').html('');
+                if (this.files && this.files[0]) {
+                    let img = document.querySelector('.image_preview');
+                    img.onload = () =>{
+                        URL.revokeObjectURL(img.src);
+                    }
+                    img.src = URL.createObjectURL(this.files[0]);
+                    document.querySelector(".image_preview").files = this.files;
+                }
+            });
+
+            //Store Product - Ajax
             $(document).on('click', '.saveProduct', function(e) {
                 e.preventDefault();
                 let name = $('#name').val();
                 let price = $('#price').val();
+                let image = $('#image')[0].files[0];
                 let description = $('#description').val();
                 let type = $('#type').val();
-                // console.log(name+price);
+
+                // console.log("Name: " + name);
+                // console.log("Image: ", image);
+
+                // Create a FormData object to send the file data
+                let formData = new FormData();
+                formData.append('name', name);
+                formData.append('price', price);
+                formData.append('image', image); // Append the file
+                formData.append('description', description);
+                formData.append('type', type);
 
                 $.ajax({
                     url: "{{ route('product.store') }}",
                     method: 'POST',
-                    data: {
-                        name: name,
-                        price: price,
-                        description: description,
-                        type: type
-                    },
+                    data: formData,
+                    processData: false, // Prevent jQuery from processing the data
+                    contentType: false, // Set content type to false
                     success: function(res) {
                         if (res.status == 'success') {
                             $('#addModal').modal('hide');
                             $('#addProductForm')[0].reset();
-                            $('.table').load(location.href+' .table');
-                            Command: toastr["success"]("Added Done!", "Success")
-                            toastr.options = {
-                            "closeButton": true,
-                            "debug": false,
-                            "newestOnTop": false,
-                            "progressBar": true,
-                            "positionClass": "toast-top-right",
-                            "preventDuplicates": false,
-                            "onclick": null,
-                            "showDuration": "100",
-                            "hideDuration": "500",
-                            "timeOut": "2500",
-                            "extendedTimeOut": "1000",
-                            "showEasing": "swing",
-                            "hideEasing": "linear",
-                            "showMethod": "fadeIn",
-                            "hideMethod": "fadeOut"
+                            $('.table-data').load(location.href+' .table-data');
+                                Command: toastr["success"]("Added Done!", "Success")
+                                toastr.options = {
+                                    "closeButton": true,
+                                    "debug": false,
+                                    "newestOnTop": false,
+                                    "progressBar": true,
+                                    "positionClass": "toast-top-right",
+                                    "preventDuplicates": false,
+                                    "onclick": null,
+                                    "showDuration": "100",
+                                    "hideDuration": "500",
+                                    "timeOut": "2500",
+                                    "extendedTimeOut": "1000",
+                                    "showEasing": "swing",
+                                    "hideEasing": "linear",
+                                    "showMethod": "fadeIn",
+                                    "hideMethod": "fadeOut"
                             }
                         }
                     },
@@ -248,7 +274,7 @@
                 })
             })
 
-            //Delete Product
+            //Delete Product - Ajax
             $(document).on('click','.deleteProduct', function(e){
                 e.preventDefault();
                 let id = $(this).data('id')
@@ -259,7 +285,7 @@
                         method: 'POST',
                         success: function(res){
                             if (res.status == 'success') {
-                                $('.table').load(location.href+' .table')
+                                $('.table-data').load(location.href+' .table-data')
                                 Command: toastr["error"]("Deleted Done!", "Success")
                                 toastr.options = {
                                 "closeButton": true,
@@ -283,6 +309,23 @@
                     })
                 }
             })
+
+            //Pagination Ajax
+            $(document).on('click','.pagination a',function(e){
+                e.preventDefault();
+                let page = $(this).attr('href').split('page=')[1]
+                product(page)
+            })
+
+            function product(page){
+                $.ajax({
+                    url:"/admin/product-pagination/paginate-data?page="+page,
+                    success: function(res){
+                        $('.table-data').html(res);
+                    }
+                })
+            }
+
         });
     </script>
 @endsection
