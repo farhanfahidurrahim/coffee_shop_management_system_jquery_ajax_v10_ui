@@ -16,8 +16,9 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('phone');
+            $table->string('address');
             $table->string('country');
-            $table->text('city');
+            $table->string('city');
             $table->string('postcode');
             $table->string('email');
             $table->decimal('total_price', 10,2);

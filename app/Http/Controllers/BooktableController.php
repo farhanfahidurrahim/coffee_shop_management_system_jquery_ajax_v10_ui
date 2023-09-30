@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Booktable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BooktableController extends Controller
 {
@@ -24,7 +25,9 @@ class BooktableController extends Controller
         ]);
 
         $data = $request->all();
+        $data['user_id']=Auth::user()->id;
         Booktable::create($data);
+
         return redirect()->back()->with(['success' => "Booking Table Successfully"]);
     }
 }

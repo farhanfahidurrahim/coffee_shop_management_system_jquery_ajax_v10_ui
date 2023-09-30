@@ -12,6 +12,7 @@ class Order extends Model
         'first_name',
         'last_name',
         'phone',
+        'address',
         'country',
         'city',
         'postcode',

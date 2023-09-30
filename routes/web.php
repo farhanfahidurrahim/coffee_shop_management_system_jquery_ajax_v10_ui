@@ -19,6 +19,9 @@ Auth::routes();
 //Frontend Route
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/menu', [App\Http\Controllers\HomeController::class, 'menu'])->name('menu');
+Route::get('/my-food-orders', [App\Http\Controllers\HomeController::class, 'myOrder'])->name('my.order');
+Route::get('/my-table-bookings', [App\Http\Controllers\HomeController::class, 'myBooking'])->name('my.booking');
+Route::post('/review-store', [App\Http\Controllers\HomeController::class, 'reviewStore'])->name('review.store');
 
 //Product & Cart & Checkout
 Route::get('/product-view/{id}', [App\Http\Controllers\HomeController::class, 'viewProduct'])->name('product.view');

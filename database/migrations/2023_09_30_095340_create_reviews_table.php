@@ -11,16 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('booktables', function (Blueprint $table) {
+        Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('date');
-            $table->string('time');
+            $table->string('name');
             $table->string('phone');
             $table->text('message');
-            $table->string('user_id');
-            $table->enum('status',['processing','booked'])->default('processing');
             $table->timestamps();
         });
     }
@@ -30,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('booktables');
+        Schema::dropIfExists('reviews');
     }
 };

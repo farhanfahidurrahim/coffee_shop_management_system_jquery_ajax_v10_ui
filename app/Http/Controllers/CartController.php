@@ -31,7 +31,6 @@ class CartController extends Controller
     public function cart()
     {
         $cartProducts = Cart::where('user_id', Auth::user()->id)->orderBy('id','desc')->get();
-
         $totalPrice = Cart::where('user_id', Auth::user()->id)->sum('price');
 
         return view('cart', compact('cartProducts', 'totalPrice'));
@@ -65,6 +64,7 @@ class CartController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'phone' => 'required',
+            'address' => 'required',
             'country' => 'required',
             'address' => 'required',
             'city' => 'required',
