@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\BooktableController;
+use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -16,8 +18,20 @@ Auth::routes();
 
 //Frontend Route
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/menu', [App\Http\Controllers\HomeController::class, 'menu'])->name('menu');
+
+//Product & Cart & Checkout
 Route::get('/product-view/{id}', [App\Http\Controllers\HomeController::class, 'viewProduct'])->name('product.view');
-Route::post('/product-add-cart/{id}', [App\Http\Controllers\HomeController::class, 'addToCart'])->name('product.addToCart');
+Route::post('add-cart/{id}', [CartController::class, 'addToCart'])->name('addToCart');
+Route::get('products/cart', [CartController::class, 'cart'])->name('cart');
+Route::get('cart-delete/{id}', [CartController::class, 'cartDelete'])->name('cart.delete');
+Route::post('checkout-proceed', [CartController::class, 'checkoutProceed'])->name('checkout.proceed');
+Route::get('checkout', [CartController::class, 'checkout'])->name('checkout');
+Route::post('order', [CartController::class, 'order'])->name('order');
+
+//Book Table
+Route::post('book-table', [BooktableController::class, 'booktable'])->name('booktable.store');
+
 
 //Backend Route
 Route::get('admin/login', [AdminController::class, 'adminLogin'])->name('admin.login')->middleware('check.adminAuth');

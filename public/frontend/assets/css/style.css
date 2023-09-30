@@ -7977,7 +7977,9 @@ h1, h2, h3, h4, h5,
 
 .product-details h3 {
   text-transform: uppercase;
-  font-size: 34px; }
+  font-size: 34px;
+  color: white;
+}
 
 .product-details .price span {
   font-size: 30px;
@@ -8125,7 +8127,9 @@ h1, h2, h3, h4, h5,
   padding: 20px; }
   .cart-total h3 {
     font-size: 20px;
-    text-transform: uppercase; }
+    text-transform: uppercase;
+    color: white;
+}
   .cart-total p {
     width: 100%;
     display: block; }

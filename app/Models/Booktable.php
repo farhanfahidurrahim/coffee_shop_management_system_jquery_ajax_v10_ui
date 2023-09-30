@@ -5,19 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model
+class Booktable extends Model
 {
     use HasFactory;
     protected $fillable=[
         'first_name',
         'last_name',
+        'date',
+        'time',
         'phone',
-        'country',
-        'city',
-        'postcode',
-        'email',
-        'total_price',
-        'user_id',
-        'status',
+        'message',
     ];
 }

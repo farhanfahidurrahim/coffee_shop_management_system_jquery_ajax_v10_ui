@@ -67,7 +67,7 @@
                             </span>
                         </div>
                     </div> --}}
-                    <form method="POST" action="{{ route('product.addToCart', $product->id) }}">
+                    <form method="POST" action="{{ route('addToCart', $product->id) }}">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                         <input type="hidden" name="name" value="{{ $product->name }}">
@@ -100,7 +100,7 @@
                                 <h3><a href="{{ route('product.view',$relatedProduct->id) }}">{{ $relatedProduct->name }}</a></h3>
                                 <p>{{ $relatedProduct->description }}</p>
                                 <p class="price"><span>${{ $relatedProduct->price }}</span></p>
-                                <p><a href="#" class="btn btn-primary btn-outline-primary">Add to Cart</a></p>
+                                <p><a href="{{ route('product.view',$relatedProduct->id) }}" class="btn btn-primary btn-outline-primary">View</a></p>
                             </div>
                         </div>
                     </div>

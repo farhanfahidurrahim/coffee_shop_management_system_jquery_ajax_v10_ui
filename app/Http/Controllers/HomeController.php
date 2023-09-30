@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cart;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -37,16 +35,10 @@ class HomeController extends Controller
         return view('view_product', compact('product','relatedProducts'));
     }
 
-    public function addToCart(Request $request, $id)
+    public function menu()
     {
-        $addCart = Cart::create([
-            "product_id" => $request->product_id,
-            "name" => $request->name,
-            "image" => $request->image,
-            "price" => $request->price,
-            "user_id" => Auth::user()->id,
-        ]);
-
-        return redirect()->route('product.view',$id)->with(['success' => "Product Added Successfully!"]);
+        $desserts = Product::select()->where('type','dessert')->orderBy('id','desc')->take('6')->get();
+        $drinks = Product::select()->where('type','drink')->orderBy('id','desc')->take('6')->get();
+        return view('menu', compact('desserts','drinks'));
     }
 }

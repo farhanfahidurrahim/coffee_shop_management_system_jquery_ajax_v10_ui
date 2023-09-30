@@ -84,40 +84,66 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="book p-4">
+                    {{-- Session Notification  --}}
+                    @if (Session::has('success'))
+                        <p class="alert {{ Session::get('alert-class', 'alert-danger') }}">{{ Session::get('success') }}</p>
+                    @elseif (Session::has('error'))
+                        <p class="alert {{ Session::get('alert-class', 'alert-danger') }}">{{ Session::get('error') }}</p>
+                    @endif
                     <h3>Book a Table</h3>
-                    <form action="#" class="appointment-form">
+                    <form action="{{ route('booktable.store') }}" method="POST" class="appointment-form">
+                        @csrf
                         <div class="d-md-flex">
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="First Name">
+                                <input type="text" name="first_name" class="form-control" placeholder="First Name">
+                                @error('first_name')
+                                    <div class="error">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="form-group ml-md-4">
-                                <input type="text" class="form-control" placeholder="Last Name">
+                                <input type="text" name="last_name" class="form-control" placeholder="Last Name">
+                                @error('last_name')
+                                    <div class="error">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="d-md-flex">
                             <div class="form-group">
                                 <div class="input-wrap">
                                     <div class="icon"><span class="ion-md-calendar"></span></div>
-                                    <input type="text" class="form-control appointment_date" placeholder="Date">
+                                    <input type="date" name="date" class="form-control" placeholder="Date">
+                                    @error('date')
+                                        <div class="error">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="form-group ml-md-4">
                                 <div class="input-wrap">
                                     <div class="icon"><span class="ion-ios-clock"></span></div>
-                                    <input type="text" class="form-control appointment_time" placeholder="Time">
+                                    <input type="text" name="time" class="form-control appointment_time" placeholder="Time">
+                                    @error('time')
+                                        <div class="error">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="form-group ml-md-4">
-                                <input type="text" class="form-control" placeholder="Phone">
+                                <input type="text" name="phone" class="form-control" placeholder="Phone">
+                                @error('phone')
+                                    <div class="error">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="d-md-flex">
                             <div class="form-group">
-                                <textarea name="" id="" cols="30" rows="2" class="form-control" placeholder="Message"></textarea>
+                                <textarea name="message" id="" cols="30" rows="2" class="form-control" placeholder="Message"></textarea>
+                                @error('message')
+                                    <div class="error">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="form-group ml-md-4">
-                                <input type="submit" value="Appointment" class="btn btn-white py-3 px-4">
+                                <input type="submit" name="submit" value="Book" class="btn btn-white py-3 px-4">
                             </div>
                         </div>
                     </form>
@@ -303,7 +329,7 @@
                                 <h3><a href="{{ route('product.view',$product->id) }}">{{ $product->name }}</a></h3>
                                 <p>A small river named Duden flows by their place and supplies</p>
                                 <p class="price"><span>${{ $product->price }}</span></p>
-                                <p><a href="product-single.html" class="btn btn-primary btn-outline-primary">View</a>
+                                <p><a href="{{ route('product.view',$product->id) }}" class="btn btn-primary btn-outline-primary">View</a>
                                 </p>
                             </div>
                         </div>
