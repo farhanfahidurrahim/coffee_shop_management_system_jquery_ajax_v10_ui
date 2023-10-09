@@ -30,6 +30,8 @@
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/style.css') }}">
 
+    <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-migrate-3.4.1.min.js"
@@ -105,8 +107,8 @@
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item active"><a href="{{ url('/home') }}" class="nav-link">Home</a></li>
                         <li class="nav-item"><a href="{{ route('menu') }}" class="nav-link">Menu</a></li>
-                        <li class="nav-item"><a href="services.html" class="nav-link">Services</a></li>
-                        <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+                        <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
+                        <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
 
                         <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
                         <li class="nav-item cart"><a href="{{ route('cart') }}" class="nav-link"><span
@@ -280,6 +282,9 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
     <script src="{{ asset('frontend/assets/js/google-map.js') }}"></script>
     <script src="{{ asset('frontend/assets/js/main.js') }}"></script>
+
+    <script src="http://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+    {!! Toastr::message() !!}
 
 </body>
 

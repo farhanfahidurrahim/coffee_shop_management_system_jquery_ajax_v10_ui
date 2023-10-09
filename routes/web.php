@@ -19,6 +19,9 @@ Auth::routes();
 //Frontend Route
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/menu', [App\Http\Controllers\HomeController::class, 'menu'])->name('menu');
+Route::get('/services', [App\Http\Controllers\HomeController::class, 'services'])->name('services');
+Route::get('/about', [App\Http\Controllers\HomeController::class, 'about'])->name('about');
+
 Route::get('/my-food-orders', [App\Http\Controllers\HomeController::class, 'myOrder'])->name('my.order');
 Route::get('/my-table-bookings', [App\Http\Controllers\HomeController::class, 'myBooking'])->name('my.booking');
 Route::post('/review-store', [App\Http\Controllers\HomeController::class, 'reviewStore'])->name('review.store');
@@ -36,7 +39,8 @@ Route::post('order', [CartController::class, 'order'])->name('order');
 Route::post('book-table', [BooktableController::class, 'booktable'])->name('booktable.store');
 
 
-//Backend Route
+//Backend Route___________________________________________________
+
 Route::get('admin/login', [AdminController::class, 'adminLogin'])->name('admin.login')->middleware('check.adminAuth');
 Route::post('admin/login-check', [AdminController::class, 'adminLoginCheck'])->name('admin.loginCheck');
 
@@ -54,7 +58,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     Route::delete('delete-ajax/{id}', [AdminController::class, 'delete_admin_ajax']);
 
     //Order Section
-    Route::get('order-index', [OrderController::class, 'index'])->name('order.index');
+    Route::get('order', [OrderController::class, 'index'])->name('order.index');
+    Route::get('changeOrderStatus', [OrderController::class, 'changeOrderStatus']);
 
     //Product Section
     Route::get('product-index', [ProductController::class, 'index'])->name('product.index');

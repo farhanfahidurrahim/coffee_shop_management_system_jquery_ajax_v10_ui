@@ -59,7 +59,7 @@
 
     <!-- Modal -->
     <div class="modal fade" id="addReview" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <form method="POST" action="">
+        <form method="POST" action="" id="addReviewForm">
             @csrf
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -68,8 +68,11 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <div class="errValidationMsgShow">
+
+                        </div>
                         <div class="form-group">
-                            <label for="name">Type Review</label>
+                            <label for="name">Type Message</label>
                             <textarea name="message" id="message" class="form-control" rows="3"></textarea>
                         </div>
                     </div>
@@ -81,18 +84,6 @@
             </div>
         </form>
     </div>
-{{-- <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script> --}}
-    <button id="testButton">Test Button</button>
-
-    <script>
-        $(document).ready(function(){
-        $('#testButton').on('click', function() {
-            alert("Test button clicked!");
-        });
-    });
-
-    </script>
-
 
     <script>
         $.ajaxSetup({
@@ -108,12 +99,12 @@
         $(document).ready(function(){
             $(document).on('click', '.saveReview', function(e){
                 e.preventDefault();
-                let review = $('#message').val();
+                let message = $('#message').val();
                 //console.log(review);
                 // alert("Save Changes button clicked! Review: " + review);
 
                 let formData = new FormData();
-                formData.append('review', review);
+                formData.append('message', message);
 
                 $.ajax({
                     url: "{{ route('review.store') }}",
@@ -122,10 +113,34 @@
                     contentType: false,
                     processData: false,
                     success: function(res){
-                        console.log(res);
+                        $('#addReview').modal('hide');
+                        $('#addReviewForm')[0].reset();
+                        Command: toastr["success"]("Review Done!", "Success!")
+                        toastr.options = {
+                        "closeButton": true,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": false,
+                        "positionClass": "toast-top-right",
+                        "preventDuplicates": false,
+                        "onclick": null,
+                        "showDuration": "300",
+                        "hideDuration": "1000",
+                        "timeOut": "2500",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                        }
                     },
                     error: function(err){
-                        console.error(err);
+                        let error = err.responseJSON;
+                        $.each(error.errors, function(index, value){
+                            $('.errValidationMsgShow').append(
+                                '<span class="text-danger">'+value+'</span>'+'<br>'
+                            )
+                        })
                     }
                 })
             });

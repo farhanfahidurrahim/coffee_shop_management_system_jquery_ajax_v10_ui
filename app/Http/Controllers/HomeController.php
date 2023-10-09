@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Booktable;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -45,6 +46,16 @@ class HomeController extends Controller
         return view('menu', compact('desserts','drinks'));
     }
 
+    public function services()
+    {
+        return view('services');
+    }
+
+    public function about()
+    {
+        return view('about');
+    }
+
     public function myOrder()
     {
         $orders = Order::select()->where('user_id', Auth::user()->id)->orderBy('id','desc')->get();
@@ -54,13 +65,25 @@ class HomeController extends Controller
     public function myBooking()
     {
         $bookings = Booktable::select()->where('user_id', Auth::user()->id)->orderBy('id','desc')->get();
+        // $checkReview = Review::select()->where('user_id', Auth::user()->id)->orderBy('id','desc')->get();
         return view('my_booking', compact('bookings'));
     }
 
     public function reviewStore(Request $request)
     {
-        $request->validate([
-            'review' => 'required',
+        $request->validate(
+            [
+                'message' => 'required|unique:reviews',
+            ],
+            [
+                'message.required' => "Hey Review Message is required!",
+                'message.unique' => "Review Already Exist!",
+            ]
+        );
+
+        Review::create([
+            'name'=>Auth::user()->name,
+            'message'=>$request->message,
         ]);
 
         return response()->json([
