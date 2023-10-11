@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/style.css') }}">
 
+    {{-- Toastr --}}
     <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"

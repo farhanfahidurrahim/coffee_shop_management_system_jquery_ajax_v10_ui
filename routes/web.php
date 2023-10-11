@@ -60,6 +60,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
     //Order Section
     Route::get('order', [OrderController::class, 'index'])->name('order.index');
     Route::get('changeOrderStatus', [OrderController::class, 'changeOrderStatus']);
+    Route::post('order-delete/{id}', [OrderController::class, 'deleteOrder']);
 
     //Product Section
     Route::get('product-index', [ProductController::class, 'index'])->name('product.index');
@@ -70,4 +71,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
     //Booking Section
     Route::get('booking-index', [BookingController::class, 'index'])->name('booking.index');
+    Route::get('changeBookingStatus', [BookingController::class, 'changeBookingStatus']);
+    Route::post('booking-delete/{id}', [BookingController::class, 'deleteBooking']);
 });

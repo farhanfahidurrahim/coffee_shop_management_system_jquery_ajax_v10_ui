@@ -44,10 +44,7 @@
                                                 data-type="{{ $data->type }}"
                                                 >Edit
                                             </a>
-                                            <a href="" class="btn btn-danger text-center deleteProduct"
-                                                data-id="{{ $data->id }}"
-                                                >Delete
-                                            </a>
+                                            <a href="" class="btn btn-danger text-center deleteProduct" data-id="{{ $data->id }}">Delete</a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -171,23 +168,23 @@
                             $('#addModal').modal('hide');
                             $('#addProductForm')[0].reset();
                             $('.table-data').load(location.href+' .table-data');
-                                Command: toastr["success"]("Added Done!", "Success")
-                                toastr.options = {
-                                    "closeButton": true,
-                                    "debug": false,
-                                    "newestOnTop": false,
-                                    "progressBar": true,
-                                    "positionClass": "toast-top-right",
-                                    "preventDuplicates": false,
-                                    "onclick": null,
-                                    "showDuration": "100",
-                                    "hideDuration": "500",
-                                    "timeOut": "2500",
-                                    "extendedTimeOut": "1000",
-                                    "showEasing": "swing",
-                                    "hideEasing": "linear",
-                                    "showMethod": "fadeIn",
-                                    "hideMethod": "fadeOut"
+                            Command: toastr["success"]("Added Done!", "Success")
+                            toastr.options = {
+                                "closeButton": true,
+                                "debug": false,
+                                "newestOnTop": false,
+                                "progressBar": true,
+                                "positionClass": "toast-top-right",
+                                "preventDuplicates": false,
+                                "onclick": null,
+                                "showDuration": "100",
+                                "hideDuration": "500",
+                                "timeOut": "2500",
+                                "extendedTimeOut": "1000",
+                                "showEasing": "swing",
+                                "hideEasing": "linear",
+                                "showMethod": "fadeIn",
+                                "hideMethod": "fadeOut"
                             }
                         }
                     },

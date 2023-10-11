@@ -24,4 +24,14 @@ class OrderController extends Controller
             'success' => "Status change successfully!"
         ]);
     }
+
+    public function deleteOrder($id)
+    {
+        $order = Order::findOrFail($id);
+
+        $order->delete();
+        return response()->json([
+            'status'=>'success'
+        ]);
+    }
 }
