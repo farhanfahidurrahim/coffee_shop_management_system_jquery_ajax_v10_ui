@@ -27,7 +27,7 @@
                             <tbody>
                                 @foreach ($orders as $row)
                                 <tr>
-                                    <th scope="row">1</th>
+                                    <th scope="row">{{ $loop->iteration }}</th>
                                     <td>{{ $row->first_name }}</td>
                                     <td>{{ $row->last_name }}</td>
                                     <td>{{ $row->phone }}</td>

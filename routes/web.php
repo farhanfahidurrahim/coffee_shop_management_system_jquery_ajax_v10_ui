@@ -25,9 +25,9 @@ Route::get('/about', [App\Http\Controllers\HomeController::class, 'about'])->nam
 Route::get('/my-food-orders', [App\Http\Controllers\HomeController::class, 'myOrder'])->name('my.order');
 Route::get('/my-table-bookings', [App\Http\Controllers\HomeController::class, 'myBooking'])->name('my.booking');
 Route::post('/review-store', [App\Http\Controllers\HomeController::class, 'reviewStore'])->name('review.store');
+Route::get('/product-view/{id}', [App\Http\Controllers\HomeController::class, 'viewProduct'])->name('product.view');
 
 //Product & Cart & Checkout
-Route::get('/product-view/{id}', [App\Http\Controllers\HomeController::class, 'viewProduct'])->name('product.view');
 Route::post('add-cart/{id}', [CartController::class, 'addToCart'])->name('addToCart');
 Route::get('products/cart', [CartController::class, 'cart'])->name('cart');
 Route::get('cart-delete/{id}', [CartController::class, 'cartDelete'])->name('cart.delete');
